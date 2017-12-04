@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+<title>YouTalkWeSign</title>
+
+<!-- FontAwesome & Bootstrap core -->
+<script src="https://use.fontawesome.com/30a2c42d68.js"></script>
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+
+<!-- Custom styles for this template -->
+<link rel="stylesheet" th:href="@{/css/app.css}" />
+
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+		<span class="navbar-brand mb-0 h1">
+			<i class="fa fa-sign-language fa-lg" aria-hidden="true"></i>
+			YouTalkWeSign
+		</span>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent" aria-expanded="false"
+			aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse  justify-content-between" id="navbarSupportedContent">
+			<form class="form-inline my-2 my-lg-0 form-search">
+				<input class="form-control mr-sm-2" type="search"
+					placeholder="Search for a video..." aria-label="Search for a video..." />
+			</form>
+			
+			<div sec:authorize="!isAuthenticated()">
+				<!-- this content is only shown to the not authenticated users -->
+			  	<form class="form-inline my-2 my-lg-0" th:action="@{/}" method="post">
+		            <input id="username" name="username" class="form-control mr-sm-2" type="text" placeholder="Username" />	            
+		            <input id="password" name="password" class="form-control mr-sm-2" type="password" placeholder="Password" />
+		            <button id="log-in-button" type="submit" class="btn btn-outline-success mr-sm-2">Login</button>
+		            <button id="register-button" type="button" class="btn btn-outline-info">Register</button>
+		        </form>
+			</div>	
+			<div sec:authorize="isAuthenticated()">
+				<!-- this content is only shown to the authenticated users -->
+			  	<ul class="nav navbar-nav pull-lg-right">
+					<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<!-- GET USERNAME -->
+	                    <span sec:authentication="name"></span>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<form action="#" th:action="@{/logout}" method="post">
+							<button type="submit" class="dropdown-item">Log out</button>
+						</form>
+					</div>
+				  </li>
+	            </ul>
+			</div>	
+		</div>
+	</nav>
+	
+	<div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul id="sidebar-nav">
+                <li alt="history">           
+                    <i class="fa fa-history" aria-hidden="true"></i>
+                    History
+                </li>
+                <li alt="hearted">
+                    <i class="fa fa-heart-o" aria-hidden="true"></i>                    	
+                    Hearted
+                </li>
+                <li alt="trending">
+                    <i class="fa fa-fire" aria-hidden="true"></i>                    	
+                    Trending
+                </li>
+                <li alt="about-us" class="active">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>                    	
+                    About Us
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">              				
+				<div class="non-visible" id="video-sample">
+					<div id="video-parent">
+						<div id="youtube-video">
+							<!-- youtube video player will come to here -->
+						</div>
+						<div id="sign-video">
+							<video src="" id="myVideo" width="465" height="310" type="video/mp4"></video>
+							<div>
+								<h4 id="current-word">-</h4>
+							</div>
+						</div>
+					</div>
+					<div id="video-controls">						
+						<h5 id="time-holder">sec: 0</h5>
+						<button id="hide-transcript" type="button" class="btn btn-default mb-3">Show/Hide Transcript</button>
+						<div id="transcript"></div>
+					</div>					
+					<hr/>
+				</div>				
+				<div id="extra">
+					<!-- sidebar clicked content will come here with thymeleaf fragment -->
+				</div>
+				
+				<div id="info">				
+					<div th:if="${param.username}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Username is null.</h6>
+	                </div>
+	                <div th:if="${param.password}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Password is null.</h6>
+	                </div>
+	                <div th:if="${param.emailNull}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Email is null.</h6>
+	                </div>
+	                <div th:if="${param.emailInvalid}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Invalid email.</h6>
+	                </div>
+					<div th:if="${param.error}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Invalid username and password.</h6>
+	                </div>
+	                <div th:if="${param.exists}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Username exists.</h6>
+	                </div>
+	                <div th:if="${param.success}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-success">You have been registered successfully.</h6>
+	                </div>
+	                <div th:if="${param.logout}"> 
+	                    <hr class="alert-hr"></hr>  	
+	                    <h6 class="alert alert-danger">You have been logged out.</h6>
+	                </div>
+				</div>
+            </div>
+        
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Bootstrap core JavaScript -->
+	<script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+	<script src="webjars/popper.js/1.12.5/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+	<script th:inline="javascript">
+		var tag = document.createElement('script');
+		tag.src = "https://www.youtube.com/iframe_api";
+		var firstScriptTag = document.getElementsByTagName('script')[0];
+		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+		// get video id from java spring thymeleaf
+		var videoId = [[${v}]];
+		if (videoId == null) {
+			$('#extra').load('/about-us');
+		} else {
+			$('#video-sample').removeClass('non-visible');
+		} 
+		
+		// get transcript of the video
+		var transcript = [[${transcript}]];
+		if (transcript == null) {
+			// do nothing
+		} else if (transcript.length == 0) {
+			$("#transcript").text('transcript is not available for this video');
+		} else {
+			transcript.forEach(function(text) {
+				var start = text.start;
+	            var startFloat = parseFloat(start);
+	            var rounded = Math.round(startFloat * 10) / 10; // one decimal place			
+				var text = text.text;
+				$('<p><b>start:</b> ' + rounded + ' <b>text:</b> ' + text + '</p>').appendTo('#transcript');
+			});
+		}
+		
+		// get words of the video
+		var words = [[${words}]];
+		if (words != null) {
+			words.forEach(function(dictionary) {
+				var dicWord = dictionary.word;
+				var url = dictionary.videoUrl;
+			});
+		}
+		
+		
+		// get mp4 video
+		var myVid = document.getElementById('myVideo');
+		
+		var player;
+		function onYouTubeIframeAPIReady() {
+			console.log('hello world');
+			player = new YT.Player('youtube-video', {
+				width: '640',
+				height: '360',	           
+	            videoId: videoId,
+	            playerVars: {	        
+	                'autoplay': 1,
+	                'controls': 0,
+	                'rel': 0,
+	                'frameborder': 0
+	            },
+				events : {
+					'onReady' : onPlayerReady,
+					'onStateChange' : onPlayerStateChange
+				}
+			});
+		}
+
+		function onPlayerReady() {
+			console.log("hey im ready");
+			//do whatever you want here. Like, player.playVideo();
+		}
+
+		function getLineByStart(value) {
+			var result  = transcript.filter(function(obj){
+				var start = obj.start;
+	            var startFloat = parseFloat(start);
+	            var rounded = Math.round(startFloat * 10) / 10; // one decimal place
+				return rounded == value;
+			});
+			return result? result[0] : null; // or undefined	
+		}	
+		
+		function getUrlByWord(value) {			
+			var result = words.filter(function(obj){
+				return obj.word === value;
+			});
+			return result? result[0] : null; // or undefined	
+		}
+	
+		// mp4 array
+		var myWords = [];
+		var myVids = [];
+		
+		// initialize timer
+		var myTimer; 
+		
+		// initalize current line index
+		var currentLineIndex = 0;
+		function onPlayerStateChange(event) {
+			if(event.data==1) { // playing
+		        myTimer = setInterval(function(){ 
+		            var time = player.getCurrentTime();
+		            var timeFloat = parseFloat(time);
+		            var rounded = Math.round(timeFloat * 10) / 10; // one decimal place
+		            $("#time-holder").text('sec: ' + rounded);		            	        
+					
+		            var lineResult = getLineByStart(rounded);		            	            
+		            
+		            if (lineResult != null) {	
+		            	// do not run at the first line		            
+		            	if (transcript.indexOf(lineResult) != 0) {
+		            		// get this inside if statement if you want to make them simultaneous
+		            		// if (myVids.length != 0) {
+							//     player.pauseVideo();
+							// }
+		            		// also remove the line:  if (transcript.indexOf(lineResult) != 0) {
+		            		player.pauseVideo();
+							
+		            		var line = transcript[currentLineIndex];
+							currentLineIndex++;
+							var text = line.text;
+							var textWords = text.split(" ");
+									
+							textWords.forEach(function(textWord) {
+								var isFound = false;
+								words.forEach(function(dictionary) {
+									var dicWord = dictionary.word;
+									if (dicWord === textWord) {
+										myWords.push(dicWord);
+										var url = dictionary.videoUrl;
+										myVids.push(url);
+										isFound = true;
+									} 
+								});	
+								if (!isFound) {
+									// fingerspell
+									for (var i = 0; i != textWord.length; i++) {
+										var ch = "" + textWord.charAt(i);
+										words.forEach(function(dictionary) {
+											var dicWord = dictionary.word;
+											if (dicWord === ch) {
+												// send word with letter all the time
+												myWords.push("" + ch + " of " + textWord); 
+												// but send the letter video url, not the word
+												var url = dictionary.videoUrl;
+												myVids.push(url);
+											} 
+										});	
+									}
+								}
+							});
+							
+							if (myVids.length != 0) {
+								var currentUrl = myVids.shift();
+								var currentWord = myWords.shift();
+										
+								myVid.src = currentUrl;
+								$('#current-word').text(currentWord);
+								myVid.play(); 														
+							}
+		            	}					
+					}										       									        		        
+				}, 100); // 100 means repeat in 100 ms
+		    } else { // not playing
+		        clearInterval(myTimer);
+		    }
+		}
+		
+		myVid.addEventListener('ended', function() {								
+            if (myVids.length != 0) { 
+            	var currentUrl = myVids.shift();
+				var currentWord = myWords.shift();
+				
+            	myVid.src = currentUrl;
+				$('#current-word').text(currentWord);
+				myVid.play();   
+            } else {
+            	// we are done with stack
+            	player.playVideo();
+            }
+    	});
+		
+		// transcript control
+		$('#hide-transcript').on('click', function() {
+			$('#transcript').toggleClass('non-visible');		
+		});
+		
+		
+		$('li').on('click', function(event) {	
+			// remove register li if exists
+			if ($('#register-li').length) {
+				$('#register-li').remove();
+			}
+			
+			// remove old parameters from url and remove alert dangers
+			window.history.replaceState({}, document.title, "/");
+			$('.alert-danger, .alert-success, .alert-hr').remove();
+			
+			// get clicked li
+			var clicked = $(this).attr('alt');
+
+			// remove current active and make clicked active
+			$('li').removeClass('active');
+			$(this).addClass('active');
+			
+			// we need this url to call java spring controller
+			var url = '/' + clicked;
+
+			// load thymeleaf fragment
+			$('#extra').load(url, function() {
+				// scroll to new location
+				window.scrollTo(0, document.querySelector('#extra').scrollHeight);				
+			});
+		});
+		
+		$('#register-button').on('click', function(event) {
+			// make other li's not active
+			$('li').removeClass('active');
+		
+			// if not exists
+			if (!$('#register-li').length) {
+				// add new li to the ul
+				$("#sidebar-wrapper ul").append(
+					'<li alt="register" id="register-li"><i class="fa fa-user" aria-hidden="true"></i> Register</li>');
+			} 
+			
+			// make it active
+			$('#register-li').addClass('active');
+
+			$('#extra').load('/register', function() {
+				// scroll to new location
+				window.scrollTo(0, document.querySelector('#extra').scrollHeight);						
+			});					
+		});
+	</script>
+</body>
+</html>

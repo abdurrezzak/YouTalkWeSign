@@ -1,0 +1,131 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+<title>YouTalkWeSign</title>
+
+<!-- FontAwesome & Bootstrap core -->
+<script src="https://use.fontawesome.com/30a2c42d68.js"></script>
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+
+<!-- Custom styles for this template -->
+<link rel="stylesheet" th:href="@{/css/reports.css}" />
+
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="http://46.101.243.149/"> 
+			<i class="fa fa-sign-language fa-lg" aria-hidden="true"></i>
+			YouTalkWeSign
+		</a>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" target="_blank" th:href="@{/pdf/project-specifications.pdf}">Project Specifications</a>
+				</li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Analysis Report</a>
+                </li>
+			</ul>		
+		</div>
+	</nav>
+   	
+   	<div class="container">
+        <h4>Description</h4>
+
+        <h6>
+			YouTalkWeSign will be a web application which is designed to serve people with hearing
+			impairments or deafness. Through an on-screen avatar, the app will translate the spoken
+			words in YouTube videos into sign language. The app can be run by replacing the "youtube"
+			word in the video address with "youtalkwesign".
+		</h6>
+		<br></br>
+		<h6>
+			<span class="text-danger">09.10.2017:</span> 
+			<a target="_blank" th:href="@{/pdf/project-specifications.pdf}">
+				Project Specifications Report
+			</a> 
+			is out.
+		</h6>
+
+		<div class="row">
+		  <div class="col-sm">
+			<h4>Group Members</h4>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td>Abdurrezzak Efe</td>
+				</tr>
+				<tr>
+					<td>Cihangir Mercan</td>
+				</tr>
+				<tr>
+					<td>Enes Kavak</td>
+				</tr>
+				<tr>
+					<td>Yasin Erdoğdu</td>
+				</tr>
+				</tbody>
+			</table>	  
+		  </div>
+		  <div class="col-sm">
+			<h4>Supervisor</h4>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td>Hamdi Dibeklioğlu</td>
+				</tr>
+				</tbody>
+			</table>	  
+		  </div>
+		  <div class="col-sm">
+			<h4>Jury Members</h4>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td>Mustafa Özdal</td>
+				</tr>
+				<tr>
+					<td>Varol Akman</td>
+				</tr>
+				</tbody>
+			</table>	  
+		  </div>
+		  <div class="col-sm">
+			<h4>Innovation Expert</h4>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td>Mustafa Sakalsız</td>
+				</tr>
+				</tbody>
+			</table>	  
+		  </div>
+		</div>
+		
+		<div id="video-sample">
+			<h4>Sample</h4>
+			<h6>
+				<a target="_blank" href="http://46.101.243.149/watch?v=oxi7HcgWga0">
+					http://46.101.243.149/watch?v=oxi7HcgWga0
+				</a> 			
+			</h6>
+			<h6>The domain (youtalkwesign.com) will be active on December 5, 2017.</h6>
+		</div>
+    </div>
+    
+    <!-- Bootstrap core JavaScript -->
+	<script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+	<script src="webjars/popper.js/1.12.5/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+	
+</body>
+</html>

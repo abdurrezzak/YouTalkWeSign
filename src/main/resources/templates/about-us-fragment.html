@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+
+<body>
+	<div th:fragment="result" id="info">
+		<h5>About Us</h5>
+		<hr/>
+		<h6>
+			YouTalkWeSign will be a web application which is designed to
+			serve people with hearing impairments or deafness. Through an
+			on-screen avatar, the app will translate the spoken words in YouTube
+			videos into sign language. The app can be run by replacing the
+			"youtube" word in the video address with "youtalkwesign".
+		</h6>
+		<hr/>
+		<h6>
+		    <span class="text-danger">09.10.2017:</span> 
+		    <a target="_blank" th:href="@{/pdf/project-specifications.pdf}">
+		        Project Specifications Report
+		    </a> is out.
+		</h6>
+		<h6>
+		    <span class="text-danger">06.11.2017:</span> 
+		    <a target="_blank" th:href="@{/pdf/analysis.pdf}">
+		        Analysis Report
+		    </a> is out.
+		</h6>
+		<hr/>
+		<div class="row">
+		  <div class="col-sm">
+			<h5>Group Members</h5>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td class="about-td">Abdurrezzak Efe</td>
+				</tr>
+				<tr>
+					<td class="about-td">Yasin Erdogdu</td>
+				</tr>
+				<tr>
+					<td class="about-td">Enes Kavak</td>
+				</tr>
+				<tr>
+					<td class="about-td">Cihangir Mercan</td>
+				</tr>
+				</tbody>
+			</table>	  
+		  </div>
+		  <div class="col-sm">
+			<h5>Supervisor</h5>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td class="about-td">Hamdi Dibeklioglu</td>
+				</tr>
+				</tbody>
+			</table>	  
+		  </div>
+		  <div class="col-sm">
+			<h5>Jury Members</h5>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td class="about-td">Varol Akman</td>
+				</tr>
+				<tr>
+					<td class="about-td">Mustafa Ozdal</td>
+				</tr>			
+				</tbody>
+			</table>	  
+		  </div>
+		  <div class="col-sm">
+			<h5>Innovation Expert</h5>
+			<table class="table table-hover">
+				<tbody>
+				<tr>
+					<td class="about-td">Mustafa Sakalsiz</td>
+				</tr>
+				</tbody>
+			</table>	  
+		  </div>
+		</div>
+	</div>
+</body>
+</html>

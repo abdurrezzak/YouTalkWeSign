@@ -1,0 +1,151 @@
+/*!
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template-overviews/simple-sidebar)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+body {
+	/* Move down content because we have a fixed navbar that is 3.5rem tall */
+  	padding-top: 3.5rem;
+}
+
+h6 {
+	line-height: 1.50;
+}
+
+.form-search .form-control {
+	min-width: 400px;
+}
+
+.register-button {
+	margin-left: 5px;
+}
+
+#wrapper {
+	padding-left: 200px;
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+#sidebar-wrapper {
+	z-index: 2000;
+	position: fixed;
+	left: 200px;
+	width: 200px;
+	height: 200%;
+	margin-left: -200px;
+	overflow-y: auto;
+	background: rgb(35, 46, 50);
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+}
+
+#page-content-wrapper {
+	position: absolute;
+	padding: 15px;
+}
+
+/* for mobile screens */
+@media screen and (max-width: 720px) {
+	#wrapper {
+		padding: 0px;
+		margin: 0px;
+	}
+    #sidebar-wrapper {
+        width: 0px;
+        left: 0px;
+		padding: 0px;
+		margin: 0px;
+    }     
+}
+
+/* Sidebar Styles */
+#sidebar-nav {
+	position: absolute;
+	top: 0;
+	width: 200px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#sidebar-nav li {
+	text-indent: 25px;
+	line-height: 60px;
+	display: block;
+	text-decoration: none;
+	color: rgb(240, 246, 254);
+	cursor: pointer;
+}
+
+#sidebar-nav li:hover {
+	text-decoration: none;
+	color: rgb(240, 246, 254);
+	background: rgb(37, 37, 37);
+}
+
+/* content styling below */
+#info {
+	text-align: justify;
+}
+
+.active {
+	text-decoration: none;
+	color: rgb(240, 246, 254);
+	background: rgb(37, 37, 37);
+}
+
+#video-sample {
+	line-height: 0;
+}
+
+#video-parent {
+	display: flex;
+}
+
+#sign-video {
+	/* to align to the bottom */
+	align-self: flex-end;
+	text-align: center;
+}
+
+#video-controls {
+	margin-top: 10px;
+	text-align: center;
+}
+
+#play-pause {
+	/* to align to the center */
+	margin: auto auto auto 0;
+}
+
+#current-word {
+	/* to align to the center */
+	margin: auto auto auto 0;
+}
+
+#avatar {
+	height: 360px;
+	width: auto;
+}
+
+/* for extras */
+.table {
+	margin-top: 15px;
+	width: auto;
+}
+.table > tbody > tr > td {
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.table > tbody > tr > td > img {
+	height: 67px;
+}
+
+.non-visible {
+	display: none;
+}

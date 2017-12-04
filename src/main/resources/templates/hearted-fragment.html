@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+</head>
+
+<body>
+	<div th:fragment="result">
+		<h5>Hearted</h5>
+		<div sec:authorize="!isAuthenticated()">
+			<hr/>
+			<div class="alert alert-secondary" role="alert">
+				This requires a login!
+			</div>
+		</div>
+		<div sec:authorize="isAuthenticated()">
+			<table class="table table-hover">		  	
+			  	<tbody>
+				    <tr th:each="video : ${heartedVideos}">
+						<td th:alt="${video.id}" class="image-column"><img th:src="${video.thumbnailImageUrl}" class="img-fluid m-x-auto d-block"/></td>
+						<td th:alt="${video.id}"><h6 th:text="${video.title}"></h6></td>
+					</tr>
+			  	</tbody>
+			</table> 
+		</div>
+	</div>
+</body>
+</html>
