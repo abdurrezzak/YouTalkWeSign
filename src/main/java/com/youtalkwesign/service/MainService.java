@@ -132,14 +132,20 @@ public class MainService {
 	}	
 	
 	/*
+	Comment to make this project a java project.
+	
 	YouTalkWeSign will be a web application which is designed to serve people with hearing impairments or deafness. 
 	Through an on-screen avatar, the app will translate the spoken words in YouTube videos into sign language. 
 	The app can be run by replacing the "youtube" word in the video address with "youtalkwesign".
+	
 	YouTalkWeSign will be a web application which is designed to serve people with hearing impairments or deafness. 
 	Through an on-screen avatar, the app will translate the spoken words in YouTube videos into sign language. 
 	The app can be run by replacing the "youtube" word in the video address with "youtalkwesign".
+	
 	YouTalkWeSign will be a web application which is designed to serve people with hearing impairments or deafness. 
 	Through an on-screen avatar, the app will translate the spoken words in YouTube videos into sign language. 
 	The app can be run by replacing the "youtube" word in the video address with "youtalkwesign".
+	
+	Comment to make this project a java project.
 	*/
 }
