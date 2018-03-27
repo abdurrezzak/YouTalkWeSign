@@ -81,7 +81,14 @@
 		    <groupId>com.sun.xml.bind</groupId>
 		    <artifactId>jaxb-core</artifactId>
 		    <version>2.3.0</version>
-		</dependency>	
+		</dependency>
+		
+		<!-- simple form things -->	
+		<dependency>
+			<groupId>com.google.cloud</groupId>
+			<artifactId>google-cloud-language</artifactId>
+			<version>1.19.0</version>
+		</dependency>			
 	</dependencies>
 
 	<build>
