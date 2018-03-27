@@ -29,9 +29,9 @@
 		</button>
 
 		<div class="collapse navbar-collapse  justify-content-between" id="navbarSupportedContent">
-			<form class="form-inline my-2 my-lg-0 form-search">
-				<input class="form-control mr-sm-2" type="search"
-					placeholder="Search for a video..." aria-label="Search for a video..." />
+			<form th:action="@{/search}" method="GET" class="form-inline my-2 my-lg-0 form-search">
+				<input class="form-control mr-sm-2" type="search" name="link" id="link"
+					placeholder="Enter a YouTube video URL..." aria-label="Enter a YouTube video URL..." />
 			</form>
 			
 			<div sec:authorize="!isAuthenticated()">
@@ -90,18 +90,26 @@
         <div id="page-content-wrapper">
             <div class="container-fluid">              				
 				<div class="non-visible" id="video-sample">
-					<div id="video-parent">
-						<div id="youtube-video">
-							<!-- youtube video player will come to here -->
-						</div>
-						<div id="sign-video">
-							<video src="" id="myVideo" width="465" height="310" type="video/mp4"></video>
-							<div>
-								<h4 id="current-word">-</h4>
+					<div class="container-row">
+						<div class="layer1">
+							<div id="youtube-video">
+								<!-- youtube video player will come to here -->
+							</div>
+						</div>								
+						<div class="layer2">
+							<div class="sign">
+								<video src="" id="myVideo" width="305" height="204" type="video/mp4"></video>
 							</div>
 						</div>
+						<div class="layer3"> <!-- neutral video -->
+							<div class="sign">
+								<video src="video/neutral.mp4" id="neutralVideo" width="305" height="204" type="video/mp4"></video>
+							</div>
+							
+						</div>
 					</div>
-					<div id="video-controls">						
+					<div id="video-controls">
+						<h4 id="current-word">-</h4>						
 						<h5 id="time-holder">sec: 0</h5>
 						<button id="hide-transcript" type="button" class="btn btn-default mb-3">Show/Hide Transcript</button>
 						<div id="transcript"></div>
@@ -200,13 +208,15 @@
 		
 		// get mp4 video
 		var myVid = document.getElementById('myVideo');
+
+		myVid.defaultPlaybackRate = 5.0; // speed  
 		
 		var player;
 		function onYouTubeIframeAPIReady() {
 			console.log('hello world');
 			player = new YT.Player('youtube-video', {
-				width: '640',
-				height: '360',	           
+				width: '968',
+				height: '544',	           
 	            videoId: videoId,
 	            playerVars: {	        
 	                'autoplay': 1,
@@ -236,13 +246,14 @@
 			return result? result[0] : null; // or undefined	
 		}	
 		
-		function getUrlByWord(value) {			
+		function getWordByUrl(value) {			
 			var result = words.filter(function(obj){
-				return obj.word === value;
+				return obj.videoUrl === value;
 			});
 			return result? result[0] : null; // or undefined	
 		}
-	
+
+		
 		// mp4 array
 		var myWords = [];
 		var myVids = [];
@@ -253,68 +264,77 @@
 		// initalize current line index
 		var currentLineIndex = 0;
 		function onPlayerStateChange(event) {
-			if(event.data==1) { // playing
+			if(event.data == 1) { // playing
 		        myTimer = setInterval(function(){ 
 		            var time = player.getCurrentTime();
 		            var timeFloat = parseFloat(time);
 		            var rounded = Math.round(timeFloat * 10) / 10; // one decimal place
 		            $("#time-holder").text('sec: ' + rounded);		            	        
 					
-		            var lineResult = getLineByStart(rounded);		            	            
+		            var lineResult = getLineByStart(rounded);
+
 		            
 		            if (lineResult != null) {	
-		            	// do not run at the first line		            
-		            	if (transcript.indexOf(lineResult) != 0) {
-		            		// get this inside if statement if you want to make them simultaneous
-		            		// if (myVids.length != 0) {
-							//     player.pauseVideo();
-							// }
-		            		// also remove the line:  if (transcript.indexOf(lineResult) != 0) {
-		            		player.pauseVideo();
-							
-		            		var line = transcript[currentLineIndex];
-							currentLineIndex++;
-							var text = line.text;
-							var textWords = text.split(" ");
+		           		/* burası yeni deneme
+		            	if (myVids.length > 30) {
+						    player.pauseVideo();
+						    // myVid.defaultPlaybackRate = 5.0;
+						}*/
+			            
+			            // current period duration
+			            var duration = lineResult.dur;
+			            var durationFloat = parseFloat(duration);
+			            console.log('hello durationFloat: ' + durationFloat);
+					
+	            		var line = transcript[currentLineIndex];
+						currentLineIndex++;
+						var text = line.text;
+						var textWords = text.split(" ");
 									
-							textWords.forEach(function(textWord) {
-								var isFound = false;
-								words.forEach(function(dictionary) {
-									var dicWord = dictionary.word;
-									if (dicWord === textWord) {
-										myWords.push(dicWord);
-										var url = dictionary.videoUrl;
-										myVids.push(url);
-										isFound = true;
-									} 
-								});	
-								if (!isFound) {
-									// fingerspell
-									for (var i = 0; i != textWord.length; i++) {
-										var ch = "" + textWord.charAt(i);
-										words.forEach(function(dictionary) {
-											var dicWord = dictionary.word;
-											if (dicWord === ch) {
-												// send word with letter all the time
-												myWords.push("" + ch + " of " + textWord); 
-												// but send the letter video url, not the word
-												var url = dictionary.videoUrl;
-												myVids.push(url);
-											} 
-										});	
-									}
-								}
-							});
-							
-							if (myVids.length != 0) {
-								var currentUrl = myVids.shift();
-								var currentWord = myWords.shift();
-										
-								myVid.src = currentUrl;
-								$('#current-word').text(currentWord);
-								myVid.play(); 														
+						textWords.forEach(function(textWord) {
+							var isFound = false;
+							words.forEach(function(dictionary) {
+								var dicWord = dictionary.word;
+								if (dicWord === textWord) {
+									myWords.push('-');
+									var url = dictionary.videoUrl;
+									myVids.push(url);
+									isFound = true;
+								} 
+							});	
+							if (!isFound) {
+								// neutral and show word with text
+								myVids.push('video/neutral.mp4');
+								myWords.push(textWord);								
 							}
-		            	}					
+						});
+											
+						if (myVids.length != 0) {
+							
+							// decide speed for this period
+							var sum = 0.0;		
+							myVids.forEach(function(url) {
+								if (url !== 'video/neutral.mp4') {
+									var fullWord = getWordByUrl(url);									
+									var length = fullWord.length;				
+								    sum = sum + length;
+								}						
+							});	
+							console.log('hello sum: ' + sum);
+							var speedNeeded = sum / durationFloat;
+							console.log('current speed: ' + speedNeeded);
+							myVid.defaultPlaybackRate = speedNeeded;
+							
+							var currentUrl = myVids.shift();
+							var currentWord = myWords.shift();
+
+							myVid.src = currentUrl;
+							
+							// old= $('#current-word').text(currentWord);
+							$('#current-word').text('current speed: ' + speedNeeded);
+							
+							myVid.play(); 	
+						}	            						
 					}										       									        		        
 				}, 100); // 100 means repeat in 100 ms
 		    } else { // not playing
@@ -322,17 +342,18 @@
 		    }
 		}
 		
-		myVid.addEventListener('ended', function() {								
+		myVid.addEventListener('ended', function() {
             if (myVids.length != 0) { 
             	var currentUrl = myVids.shift();
 				var currentWord = myWords.shift();
 				
             	myVid.src = currentUrl;
 				$('#current-word').text(currentWord);
-				myVid.play();   
+				myVid.play(); 	
             } else {
             	// we are done with stack
             	player.playVideo();
+            	// myVid.defaultPlaybackRate = 3.0;
             }
     	});
 		
