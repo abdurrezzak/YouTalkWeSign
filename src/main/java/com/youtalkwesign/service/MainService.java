@@ -1,5 +1,8 @@
 package com.youtalkwesign.service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -7,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +22,17 @@ import javax.xml.bind.Unmarshaller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.ServiceAccountCredentials;
+import com.google.cloud.language.v1.AnalyzeSyntaxRequest;
+import com.google.cloud.language.v1.AnalyzeSyntaxResponse;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.Document.Type;
+import com.google.cloud.language.v1.EncodingType;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.LanguageServiceSettings;
+import com.google.cloud.language.v1.Token;
 import com.youtalkwesign.model.Text;
 import com.youtalkwesign.model.Transcript;
 import com.youtalkwesign.model.Word;
@@ -90,7 +105,11 @@ public class MainService {
 				newTexts.add(temp);		
 			}
 		}			
-		return newTexts;
+		// get simple forms
+		List<Text> simpleTexts = getSimpleForms(newTexts);
+		
+		// return 
+		return simpleTexts;
 	}
 	
 	public List<Word> getWords(List<Text> texts) {
@@ -121,15 +140,86 @@ public class MainService {
 	        }
 	           
 		}
-		
+			
 		// get word set from the database and
 		// convert iterable to array list
 		Iterable<Word> source = wordRepo.findAll(wordSet);
-		List<Word> target = new ArrayList<Word>();
+		List<Word> target = new ArrayList<Word>();		
 		source.forEach(target::add);
 		
 		return target;		
 	}	
+	
+	private List<Text> getSimpleForms(List<Text> texts) {
+		
+		// initialize result
+		List<Text> result = new ArrayList<Text>();
+		
+		// initialize list
+		String lines = "";
+		for (Text text : texts) {
+			lines = lines + text.getText() + " LINEBREAK ";
+		}
+		
+		List<String> simpleLines = new ArrayList<String>();
+		
+		GoogleCredentials credentials;
+		LanguageServiceSettings settings;
+	    File credentialsPath = new File("/home/service-account-file.json");  
+	    // TODO: D:/service-account-file.json OR /home/service-account-file.json
+	    try (FileInputStream serviceAccountStream = new FileInputStream(credentialsPath)) {
+	    	credentials = ServiceAccountCredentials.fromStream(serviceAccountStream);
+	      	FixedCredentialsProvider credentialsProvider = FixedCredentialsProvider.create(credentials);	    
+			settings = LanguageServiceSettings.newBuilder()
+											.setCredentialsProvider(credentialsProvider)
+											.build();
+			LanguageServiceClient language = LanguageServiceClient.create(settings);
+			Document doc = Document.newBuilder()
+					.setContent(lines)
+					.setType(Type.PLAIN_TEXT)
+					.build();
+			AnalyzeSyntaxRequest request = AnalyzeSyntaxRequest.newBuilder()
+					.setDocument(doc)
+					.setEncodingType(EncodingType.UTF16)
+					.build();
+			
+			// analyze the syntax in the given text
+			AnalyzeSyntaxResponse response = language.analyzeSyntax(request);	
+			
+			// response			
+			for (Token token : response.getTokensList()) {
+				simpleLines.add(token.getLemma());
+			}		
+	    } catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} 
+		
+		String fullTranscript = "";		
+		for (String line : simpleLines) {
+			fullTranscript = fullTranscript + line + " ";
+		}
+		
+		// split them according to LINEBREAK sentinel value
+		List<String> updatedLines = 
+				new ArrayList<String>(Arrays.asList(fullTranscript.split("LINEBREAK")));
+		
+		// update texts and add it to result
+		for (int i = 0; i < texts.size(); i++) {
+			Text text = texts.get(i);
+			String updated = updatedLines.get(i);
+			updated = updated.replace("--", ""); // remove dashes
+			updated = updated.replaceFirst("^\\s*", ""); // remove front spaces from lines
+			updated = updated.replaceAll("\\s+$", ""); // remove end spaces from lines
+			text.setText(updated);
+			
+			result.add(text);
+		}		
+		return result;
+	}	
+}
+	
 	
 	/*
 		Comment to make this project a java project.
