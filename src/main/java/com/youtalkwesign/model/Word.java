@@ -11,15 +11,20 @@ public class Word {
 
 	@Column(name = "video_url")
 	private String videoUrl;
+	
+	@Column(name = "length")
+	private double length;
 
 	public Word() {
 		word = "";
 		videoUrl = "";
+		length = 0.0;
 	}
 
-	public Word(String word, String videoUrl) {
+	public Word(String word, String videoUrl, double length) {
 		this.word = word;
 		this.videoUrl = videoUrl;
+		this.length = length;
 	}
 
 	public String getWord() {
@@ -38,8 +43,16 @@ public class Word {
 		this.videoUrl = videoUrl;
 	}
 	
+	public double getLength() {
+		return length;
+	}
+
+	public void setLength(double length) {
+		this.length = length;
+	}
+
 	@Override
 	public String toString() {
-		return "Word [word=" + word + ", videoUrl=" + videoUrl + "]";
+		return "Word [word=" + word + ", videoUrl=" + videoUrl + ", length=" + length + "]";
 	}
 }
