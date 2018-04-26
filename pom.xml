@@ -70,6 +70,12 @@
 		    <version>4.0.0-beta</version>
 		</dependency>
 		
+		<dependency>
+		    <groupId>org.webjars.bower</groupId>
+		    <artifactId>seiyria-bootstrap-slider</artifactId>
+		    <version>9.7.2</version>
+		</dependency>
+	
 		<!-- for transcript -->
 		<dependency>
 		    <groupId>com.sun.xml.bind</groupId>
@@ -88,7 +94,15 @@
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-language</artifactId>
 			<version>1.19.0</version>
-		</dependency>			
+		</dependency>	
+		
+		<!-- youtube search things -->
+		<dependency>
+		    <groupId>com.google.apis</groupId>
+		    <artifactId>google-api-services-youtube</artifactId>
+		    <version>v3-rev151-1.18.0-rc</version> <!-- newer versions have made problems -->
+		</dependency>
+
 	</dependencies>
 
 	<build>
