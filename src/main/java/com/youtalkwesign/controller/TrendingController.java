@@ -18,35 +18,29 @@ public class TrendingController {
 		List<Video> trendingVideos = new ArrayList<Video>();
 
 		Video videoOne = new Video();
-		videoOne.setId("_QZpK2OT1Ws");
-		videoOne.setTitle("GoT - Battle of the Bastards - Jon Snow y Rickon Stark");
-		videoOne.setThumbnailImageUrl("https://i.ytimg.com/vi/_QZpK2OT1Ws/maxresdefault.jpg");	
+		videoOne.setId("jyAXQAJXzxs");
+		videoOne.setTitle("Game of Thrones: Cast Commentary on Jon, Daenerys, and Jorah Meeting (HBO)");
+		videoOne.setThumbnailImageUrl("https://i.ytimg.com/vi/jyAXQAJXzxs/maxresdefault.jpg");
 		
 		Video videoTwo = new Video();
-		videoTwo.setId("k-NxgYt56pM");
-		videoTwo.setTitle("Trump's approval rating hits historic low, Washington Post-ABC poll says");
-		videoTwo.setThumbnailImageUrl("https://i.ytimg.com/vi/k-NxgYt56pM/maxresdefault.jpg");
-				
+		videoTwo.setId("KM4Xe6Dlp0Y");
+		videoTwo.setTitle("Looks aren't everything. Believe me, I'm a model. | Cameron Russell");
+		videoTwo.setThumbnailImageUrl("https://i.hizliresim.com/oOJGvb.jpg");	
+		
 		Video videoThree = new Video();
-		videoThree.setId("ekvA17eyfdg");
-		videoThree.setTitle("Why Edward Norton Doesn't Get Many Movie Offers");
-		videoThree.setThumbnailImageUrl("https://i.ytimg.com/vi/ekvA17eyfdg/maxresdefault.jpg");
+		videoThree.setId("Sv5QitqbxJw");
+		videoThree.setTitle("The biggest risks facing cities -- and some solutions | Robert Muggah");
+		videoThree.setThumbnailImageUrl("https://i.ytimg.com/vi/Sv5QitqbxJw/maxresdefault.jpg");
 		
 		Video videoFour = new Video();
-		videoFour.setId("cKxRvEZd3Mw");
-		videoFour.setTitle("Hello World - Machine Learning Recipes #1");
-		videoFour.setThumbnailImageUrl("https://i.ytimg.com/vi/cKxRvEZd3Mw/maxresdefault.jpg");
-		
-		Video videoFive = new Video();
-		videoFive.setId("F463aM90ZPM");
-		videoFive.setTitle("Top 10 Best Prison Break Moments");
-		videoFive.setThumbnailImageUrl("https://i.ytimg.com/vi/F463aM90ZPM/maxresdefault.jpg");
+		videoFour.setId("yx9dRL1BCCQ");
+		videoFour.setTitle("Game of Thrones: The Frozen Lake (HBO)");
+		videoFour.setThumbnailImageUrl("https://i.ytimg.com/vi/yx9dRL1BCCQ/maxresdefault.jpg");
 	
 		trendingVideos.add(videoOne);
 		trendingVideos.add(videoTwo);
 		trendingVideos.add(videoThree);
 		trendingVideos.add(videoFour);
-		trendingVideos.add(videoFive);
 		model.addAttribute("trendingVideos", trendingVideos);
 		
 		return "trending-fragment :: result";

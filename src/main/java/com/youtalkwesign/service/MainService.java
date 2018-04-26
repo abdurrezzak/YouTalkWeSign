@@ -99,9 +99,25 @@ public class MainService {
 				}
 				
 				Text temp = new Text();
+				
+				// set start
+				String start = currentTexts.get(i).getStart();
 				temp.setStart(currentTexts.get(i).getStart());
-				temp.setDur(currentTexts.get(i).getDur());
+				
+				// set duration
+				if (i != currentTexts.size() - 1) {
+					String nextStart = currentTexts.get(i + 1).getStart();
+					double startDouble = Double.parseDouble(start);		
+					double nextStartDouble = Double.parseDouble(nextStart);
+					double newDurDouble = nextStartDouble - startDouble;
+					temp.setDur("" + newDurDouble);
+				} else {
+					temp.setDur(currentTexts.get(i).getDur());
+				}		
+				
+				// set text
 				temp.setText(text);
+				
 				newTexts.add(temp);		
 			}
 		}			
@@ -132,20 +148,17 @@ public class MainService {
 			for (int k = 0; k < words.length; k++) {				
 				String word = words[k];							
 				wordSet.add(word);
-			}
-			
-			// add all letters also (count: 26)
-	        for(char c = 'A'; c <= 'Z'; c++) {
-	        	wordSet.add("" + c);
-	        }
-	           
+			}           
 		}
 			
 		// get word set from the database and
 		// convert iterable to array list
 		Iterable<Word> source = wordRepo.findAll(wordSet);
 		List<Word> target = new ArrayList<Word>();		
-		source.forEach(target::add);
+		source.forEach(word -> {
+			word.setVideoUrl("sign-videos/" + word.getWord() + ".mp4");
+			target.add(word);
+		});
 		
 		return target;		
 	}	
@@ -219,3 +232,4 @@ public class MainService {
 		return result;
 	}
 }
+

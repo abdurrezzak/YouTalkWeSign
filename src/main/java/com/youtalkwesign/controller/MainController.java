@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.youtalkwesign.model.Text;
 import com.youtalkwesign.model.Word;
+import com.youtalkwesign.repository.WordRepository;
 import com.youtalkwesign.service.MainService;
 
 @Controller
@@ -18,6 +19,9 @@ public class MainController {
 	
 	@Autowired
 	MainService service;
+	
+	@Autowired
+	WordRepository wordRepo;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String displayWelcomePage() {
