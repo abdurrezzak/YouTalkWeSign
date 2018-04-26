@@ -102,35 +102,156 @@ h6 {
 	line-height: 0;
 }
 
-#video-parent {
-	display: flex;
+.container-row {
+    margin: 0;
+    position: relative;
+	width: 919px;
+	height: 516px;
 }
 
-#sign-video {
-	/* to align to the bottom */
-	align-self: flex-end;
-	text-align: center;
+#layer1 {
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+}
+
+#layer2 {
+    position: absolute;
+    background: red;
+    z-index: 2;
+    left: 919px;
+    top: 516px;
+}
+
+.grabbable {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+ /* (Optional) Apply a "closed-hand" cursor during drag operation. */
+.grabbable:active { 
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+#inside-sign-1 {
+	position: absolute;
+	overflow: hidden;
+	z-index: 2;
+    width: 146px;
+    right: 0;
+    bottom: 0;
+}
+
+#inside-sign-2 {
+	position: absolute;
+	overflow: hidden;
+	z-index: 1;
+    width: 146px;
+    right: 0;
+    bottom: 0;
+    
+}
+
+#myVideo {
+    margin-left: -71px; //  289/2 - 146/2
+    -webkit-user-select: none; /* Safari */        
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+/Edge */
+user-select: none; /* Standard */
+}
+
+#neutralVideo {
+    margin-left: -71px; //  289/2 - 146/2
+    -webkit-user-select: none; /* Safari */        
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* IE10+/Edge */
+user-select: none; /* Standard */
+}
+
+.progress {
+	border-radius: 0px;
+}
+
+.progress-bar {
+	background-color: rgb(18, 50, 53);
+	width: 0%;
 }
 
 #video-controls {
-	margin-top: 10px;
+	width: 919px;
+	height: 36px;
+	margin-top: 0px;
 	text-align: center;
+	background-color: rgb(18, 50, 53);
+	border-top: 1px solid white;
 }
 
-#play-pause {
-	/* to align to the center */
-	margin: auto auto auto 0;
+.control-icon {
+	color: rgb(233, 241, 254);
+	font-size: 24px;
 }
 
-#current-word {
-	/* to align to the center */
-	margin: auto auto auto 0;
+.clickable-button {
+	margin-top: 5px;
+	margin-bottom: 5px; 
+	margin-left: 27px;
+	margin-right: 27px;	
+    background-color: Transparent;
+    background-repeat: no-repeat;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline:none;
 }
 
-#avatar {
-	height: 360px;
-	width: auto;
+.clickable-button:focus {
+	outline: none;
 }
+
+.clickable-button-first {
+	margin-left: 59px;
+}
+
+.slider.slider-horizontal{
+ 	width: 100px !important;
+}
+#GC .slider-selection {
+	background: white;
+}
+#GC .slider-handle {
+	background: white;
+}
+
+.word-div {
+	text-align:center;
+	background: rgb(18, 50, 53);
+}
+
+#current-word {	
+	color: rgb(233, 241, 254);
+	margin: 0px;
+	padding: 0px;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+} 
+#dummy-word {
+	color: rgb(18, 50, 53);
+	margin: 0px;
+	padding: 0px;
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
+}
+
+
 
 /* for extras */
 .table {

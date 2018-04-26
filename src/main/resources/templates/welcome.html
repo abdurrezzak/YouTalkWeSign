@@ -11,6 +11,7 @@
 <!-- FontAwesome & Bootstrap core -->
 <script src="https://use.fontawesome.com/30a2c42d68.js"></script>
 <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="webjars/seiyria-bootstrap-slider/9.7.2/dist/css/bootstrap-slider.min.css" />
 
 <!-- Custom styles for this template -->
 <link rel="stylesheet" th:href="@{/css/app.css}" />
@@ -29,9 +30,9 @@
 		</button>
 
 		<div class="collapse navbar-collapse  justify-content-between" id="navbarSupportedContent">
-			<form th:action="@{/search}" method="GET" class="form-inline my-2 my-lg-0 form-search">
-				<input class="form-control mr-sm-2" type="search" name="link" id="link"
-					placeholder="Enter a YouTube video URL..." aria-label="Enter a YouTube video URL..." />
+			<form  class="form-inline my-2 my-lg-0 form-search">
+				<input class="form-control mr-sm-2" type="search"  id="search-field"
+					placeholder="Search for a video..." aria-label="Search for a video..." />
 			</form>
 			
 			<div sec:authorize="!isAuthenticated()">
@@ -78,7 +79,7 @@
                     <i class="fa fa-fire" aria-hidden="true"></i>                    	
                     Trending
                 </li>
-                <li alt="about-us" class="active">
+                <li alt="about-us">
                     <i class="fa fa-info-circle" aria-hidden="true"></i>                    	
                     About Us
                 </li>
@@ -91,31 +92,58 @@
             <div class="container-fluid">              				
 				<div class="non-visible" id="video-sample">
 					<div class="container-row">
-						<div class="layer1">
+						<div id="layer1">
 							<div id="youtube-video">
 								<!-- youtube video player will come to here -->
 							</div>
 						</div>								
-						<div class="layer2">
-							<div class="sign">
-								<video src="" id="myVideo" width="305" height="204" type="video/mp4"></video>
+						<div id="layer2" class="grabbable">
+							<div id="inside-sign-1">
+								<video src="" id="myVideo" width="289" height="193" type="video/mp4"></video>
+								<div class="word-div non-visible">
+									<h4 id="current-word"></h4>	
+								</div>	
 							</div>
-						</div>
-						<div class="layer3"> <!-- neutral video -->
-							<div class="sign">
-								<video src="video/neutral.mp4" id="neutralVideo" width="305" height="204" type="video/mp4"></video>
-							</div>
-							
+							<div id="inside-sign-2">
+								<video src="sign-videos/neutral.mp4" id="neutralVideo" width="289" height="193" type="video/mp4"></video>
+								<div class="word-div non-visible">
+									<h4 id="dummy-word">-</h4>	
+								</div>	
+							</div>								
 						</div>
 					</div>
+					<div id="my-progress" class="progress">
+					  	<div id="my-progress-bar" class="progress-bar" role="progressbar" 
+					  	aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+					  		<small id="time-span">
+					  			-
+					  		</small>
+					  	</div>
+					</div>
 					<div id="video-controls">
-						<h4 id="current-word">-</h4>						
-						<h5 id="time-holder">sec: 0</h5>
-						<button id="hide-transcript" type="button" class="btn btn-default mb-3">Show/Hide Transcript</button>
-						<div id="transcript"></div>
-					</div>					
+						<input type="text" class="span2" value="" 
+							data-slider-min="0" data-slider-max="100" data-slider-step="1" 
+							data-slider-value="100" data-slider-id="GC" id="G" 
+							data-slider-tooltip="hide" data-slider-handle="round" />
+									
+						<button type="button" id="subtitles-icon" class="clickable-button clickable-button-first">
+							<i class="fa fa-newspaper-o control-icon"></i>
+						</button>
+						<button type="button" id="pause-icon" class="clickable-button">
+							<i class="fa fa-pause control-icon"></i>
+						</button>
+						<button type="button" id="resume-icon" class="clickable-button non-visible">
+							<i class="fa fa-play control-icon"></i>
+						</button>
+						<button type="button" class="clickable-button">
+							<i class="fa fa-heart control-icon"></i>
+						</button>
+						<button type="button" class="clickable-button">
+							<i class="fa fa-cog control-icon"></i>
+						</button>																			   						
+					</div>								
 					<hr/>
-				</div>				
+				</div>							
 				<div id="extra">
 					<!-- sidebar clicked content will come here with thymeleaf fragment -->
 				</div>
@@ -163,10 +191,51 @@
     <!-- /#wrapper -->
 
     <!-- Bootstrap core JavaScript -->
+	
 	<script src="webjars/jquery/3.2.1/jquery.min.js"></script>
 	<script src="webjars/popper.js/1.12.5/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="webjars/seiyria-bootstrap-slider/9.7.2/dist/bootstrap-slider.min.js"></script>
 	<script th:inline="javascript">
+		// drag listener OLD DRAG 
+		//Make the DIV element draggagle:
+		dragElement(document.getElementById(("layer2")));
+		
+		function dragElement(elmnt) {
+			var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+		 
+		    elmnt.onmousedown = dragMouseDown;
+		    elmnt.onmouseleave = closeDragElement; // if it leaves somehow
+
+			function dragMouseDown(e) {
+		    	e = e || window.event;
+		    	// get the mouse cursor position at startup:
+		    	pos3 = e.clientX;
+		    	pos4 = e.clientY;
+		    	document.onmouseup = closeDragElement;
+		    	// call a function whenever the cursor moves:
+		    	document.onmousemove = elementDrag;
+			}
+		
+			function elementDrag(e) {
+			    e = e || window.event;
+			    // calculate the new cursor position:
+			    pos1 = pos3 - e.clientX;
+			    pos2 = pos4 - e.clientY;
+			    pos3 = e.clientX;
+			    pos4 = e.clientY;
+			    // set the element's new position:
+			    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+			    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+			}
+		
+			function closeDragElement() {
+		    	// stop moving when mouse button is released
+		    	document.onmouseup = null;
+		    	document.onmousemove = null;	    	
+			}	
+		} 
+	
 		var tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/iframe_api";
 		var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -182,20 +251,7 @@
 		
 		// get transcript of the video
 		var transcript = [[${transcript}]];
-		if (transcript == null) {
-			// do nothing
-		} else if (transcript.length == 0) {
-			$("#transcript").text('transcript is not available for this video');
-		} else {
-			transcript.forEach(function(text) {
-				var start = text.start;
-	            var startFloat = parseFloat(start);
-	            var rounded = Math.round(startFloat * 10) / 10; // one decimal place			
-				var text = text.text;
-				$('<p><b>start:</b> ' + rounded + ' <b>text:</b> ' + text + '</p>').appendTo('#transcript');
-			});
-		}
-		
+
 		// get words of the video
 		var words = [[${words}]];
 		if (words != null) {
@@ -203,8 +259,7 @@
 				var dicWord = dictionary.word;
 				var url = dictionary.videoUrl;
 			});
-		}
-		
+		}	
 		
 		// get mp4 video
 		var myVid = document.getElementById('myVideo');
@@ -215,13 +270,13 @@
 		function onYouTubeIframeAPIReady() {
 			console.log('hello world');
 			player = new YT.Player('youtube-video', {
-				width: '968',
-				height: '544',	           
+				width: '919',
+				height: '516',	           
 	            videoId: videoId,
 	            playerVars: {	        
 	                'autoplay': 1,
-	                'controls': 0,
 	                'rel': 0,
+	                'controls': 0,
 	                'frameborder': 0
 	            },
 				events : {
@@ -229,11 +284,9 @@
 					'onStateChange' : onPlayerStateChange
 				}
 			});
-		}
-
+		}		
 		function onPlayerReady() {
 			console.log("hey im ready");
-			//do whatever you want here. Like, player.playVideo();
 		}
 
 		function getLineByStart(value) {
@@ -261,42 +314,64 @@
 		// initialize timer
 		var myTimer; 
 		
-		// initalize current line index
-		var currentLineIndex = 0;
+		// important function
 		function onPlayerStateChange(event) {
 			if(event.data == 1) { // playing
+				console.log('playing');
+				myVid.play();
+				    
+				 // show pause icon
+				$('#resume-icon').addClass('non-visible');
+				$('#pause-icon').removeClass('non-visible');
+							
 		        myTimer = setInterval(function(){ 
+		        	
+		        	var putZero = function(val) {
+						if (val.toString().length == 1) {
+							val = "0" + val;
+			            }
+						return val;
+					}
+		        	
+		        	// set progress bar first
+		        	var current = player.getCurrentTime();
+		        	var minutes = putZero(parseInt(current / 60, 10));
+		        	var seconds = putZero(parseInt(current % 60, 10));
+			        	
+					var duration = player.getDuration();
+					var minutesDur = putZero(parseInt(duration / 60, 10));				
+		        	var secondsDur = putZero(parseInt(duration % 60, 10));
+
+					var percent = (current / duration) * 100;
+					$('#my-progress-bar').css('width', percent + '%')
+										 .attr('aria-valuenow', percent);
+					
+					$('#time-span').text(minutes + ':' + seconds + '/' +
+											   minutesDur + ':' + secondsDur); 					
+				
 		            var time = player.getCurrentTime();
 		            var timeFloat = parseFloat(time);
 		            var rounded = Math.round(timeFloat * 10) / 10; // one decimal place
-		            $("#time-holder").text('sec: ' + rounded);		            	        
-					
+		            $("#time-holder").text('sec: ' + rounded);	
+		            
 		            var lineResult = getLineByStart(rounded);
-
 		            
 		            if (lineResult != null) {	
-		           		/* burası yeni deneme
-		            	if (myVids.length > 30) {
-						    player.pauseVideo();
-						    // myVid.defaultPlaybackRate = 5.0;
-						}*/
 			            
 			            // current period duration
 			            var duration = lineResult.dur;
 			            var durationFloat = parseFloat(duration);
 			            console.log('hello durationFloat: ' + durationFloat);
-					
-	            		var line = transcript[currentLineIndex];
-						currentLineIndex++;
-						var text = line.text;
+
+						var text = lineResult.text; // efsane
 						var textWords = text.split(" ");
 									
 						textWords.forEach(function(textWord) {
 							var isFound = false;
 							words.forEach(function(dictionary) {
 								var dicWord = dictionary.word;
-								if (dicWord === textWord) {
-									myWords.push('-');
+								if (dicWord === textWord) { // old version is at 11 april									
+									myWords.push(textWord);										
 									var url = dictionary.videoUrl;
 									myVids.push(url);
 									isFound = true;
@@ -304,25 +379,38 @@
 							});	
 							if (!isFound) {
 								// neutral and show word with text
-								myVids.push('video/neutral.mp4');
-								myWords.push(textWord);								
+								myVids.push('sign-videos/neutral.mp4');							
+								myWords.push(textWord);							
 							}
 						});
 											
 						if (myVids.length != 0) {
 							
 							// decide speed for this period
-							var sum = 0.0;		
+							var sum = 0.0;	
+							console.log('my length: ' + myVids.length);
+							console.log('heya: ' + myVids);
 							myVids.forEach(function(url) {
-								if (url !== 'video/neutral.mp4') {
+								if (url !== 'sign-videos/neutral.mp4') {
 									var fullWord = getWordByUrl(url);									
 									var length = fullWord.length;				
 								    sum = sum + length;
+								} else {
+									sum = sum + 1; // neutal is 1 seconds long
 								}						
 							});	
+							// consider delays: 0.3 seconds for each video
+							sum = sum + 0.3 * myVids.length;
+							
 							console.log('hello sum: ' + sum);
 							var speedNeeded = sum / durationFloat;
+							var isTooShort = 1 > speedNeeded - 1;
+							if (isTooShort) {
+								speedNeeded = 1;
+							}
+							
 							console.log('current speed: ' + speedNeeded);
+
 							myVid.defaultPlaybackRate = speedNeeded;
 							
 							var currentUrl = myVids.shift();
@@ -330,15 +418,22 @@
 
 							myVid.src = currentUrl;
 							
-							// old= $('#current-word').text(currentWord);
-							$('#current-word').text('current speed: ' + speedNeeded);
+							$('#current-word').html(currentWord);
 							
 							myVid.play(); 	
 						}	            						
-					}										       									        		        
+					}
 				}, 100); // 100 means repeat in 100 ms
 		    } else { // not playing
 		        clearInterval(myTimer);
+		    
+		        console.log('paused');
+		    	// it means, avatar should also be paused
+		    	myVid.pause();
+		    	
+		    	// show play icon
+				$('#pause-icon').addClass('non-visible');
+				$('#resume-icon').removeClass('non-visible');
 		    }
 		}
 		
@@ -348,25 +443,23 @@
 				var currentWord = myWords.shift();
 				
             	myVid.src = currentUrl;
-				$('#current-word').text(currentWord);
+				$('#current-word').html(currentWord);
 				myVid.play(); 	
             } else {
             	// we are done with stack
-            	player.playVideo();
-            	// myVid.defaultPlaybackRate = 3.0;
             }
     	});
-		
-		// transcript control
-		$('#hide-transcript').on('click', function() {
-			$('#transcript').toggleClass('non-visible');		
-		});
 		
 		
 		$('li').on('click', function(event) {	
 			// remove register li if exists
 			if ($('#register-li').length) {
 				$('#register-li').remove();
+			}
+			
+			// remove search li if exists
+			if ($('#search-li').length) {
+				$('#search-li').remove();
 			}
 			
 			// remove old parameters from url and remove alert dangers
@@ -385,8 +478,7 @@
 
 			// load thymeleaf fragment
 			$('#extra').load(url, function() {
-				// scroll to new location
-				window.scrollTo(0, document.querySelector('#extra').scrollHeight);				
+				window.scrollTo(0, document.querySelector('#extra').scrollHeight);					
 			});
 		});
 		
@@ -409,6 +501,109 @@
 				window.scrollTo(0, document.querySelector('#extra').scrollHeight);						
 			});					
 		});
+		
+		$('#search-field').keyup(function(event) {
+			if (event.keyCode === 13) { // disalbe enter key
+				return false;
+			}	
+				
+			// make other li's not active
+			$('li').removeClass('active');
+			
+			// if not exists
+			if (!$('#search-li').length) {
+				// add new li to the ul
+				$("#sidebar-wrapper ul").append(
+					'<li alt="search" id="search-li"><i class="fa fa-search" aria-hidden="true"></i> Search</li>');
+			} 
+				
+			// make it active
+			$('#search-li').addClass('active');
+				
+			// get field value and send GET request
+			var fieldValue = $(this).val();
+			fieldValue = fieldValue.replace(' ', '+');
+			console.log(fieldValue);
+			$('#extra').load('/search?keyword=' + fieldValue, function() {
+				if (document.getElementById("video-sample").classList.contains('non-visible')) {
+					// nothing to do
+				} else {
+					// scroll to new location
+					window.scrollTo(0, document.querySelector('#extra').scrollHeight * 0.2);	
+				}						
+			});	
+	    });
+		
+
+		var min = 200;
+		var max = 1119;				
+		document.getElementById('my-progress').addEventListener('click', function (e) {		
+		    var x = e.pageX - this.offsetLeft - min;
+			var percent = (x / (max - min)) * 100;
+			var duration = player.getDuration();	
+			$('#my-progress-bar').css('width', percent + '%')
+							  .attr('aria-valuenow', percent); 
+			
+			player.seekTo((percent / 100) * duration);
+			
+			// set progress bar
+			var putZero = function(val) {
+				if (val.toString().length == 1) {
+					val = "0" + val;
+			    }
+				return val;
+			}		
+        	var current = player.getCurrentTime();
+        	var minutes = putZero(parseInt(current / 60, 10));
+        	var seconds = putZero(parseInt(current % 60, 10));
+	        	
+			var duration = player.getDuration();
+			var minutesDur = putZero(parseInt(duration / 60, 10));				
+        	var secondsDur = putZero(parseInt(duration % 60, 10));
+
+			var percent = (current / duration) * 100;
+			$('#time-span').text(minutes + ':' + seconds + '/' +
+									   minutesDur + ':' + secondsDur); 	
+		}); 
+		
+		
+		// sound slider With JQuery
+		var soundSliding = function() {
+			// console.log('current sound: ' + g.getValue());
+			player.setVolume(g.getValue());
+		};
+		var g = $('#G').slider()
+				.on('slide', soundSliding)
+				.data('slider');		
+		
+		$('#pause-icon').on('click', function(event) {
+			// pause both players
+			player.pauseVideo();
+			myVid.pause();
+			
+			// show play icon
+			$(this).addClass('non-visible');
+			$('#resume-icon').removeClass('non-visible');
+		});
+		
+		$('#resume-icon').on('click', function(event) {
+			// pause both players
+			player.playVideo();
+			myVid.play();
+			
+			// show pause icon
+			$(this).addClass('non-visible');
+			$('#pause-icon').removeClass('non-visible');
+		});
+
+		$('#subtitles-icon').on('click', function(event) {
+			$('.word-div').toggleClass('non-visible');
+		});
+		
+		// calledfrom thymeleaf fragments when video thumbnails are clicked
+		function videoThumbnailClicked(clickedVideoId) {
+			window.location.replace("/watch?v=" + clickedVideoId);
+	    }
 	</script>
 </body>
 </html>

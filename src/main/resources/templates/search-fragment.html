@@ -5,11 +5,11 @@
 </head>
 
 <body>
-    <div th:fragment="result">
-    	<h5>Trending</h5>
+	<div th:fragment="result">
+    	<h5>Search</h5>
         <table class="table table-hover">		  	
 		  	<tbody>
-			    <tr th:each="video : ${trendingVideos}" 
+			    <tr th:each="video : ${searchVideos}"
 			    	th:onclick="'javascript:videoThumbnailClicked(\'' + ${video.id} + '\');'">
 					<td th:alt="${video.id}" class="image-column"><img th:src="${video.thumbnailImageUrl}" class="img-fluid m-x-auto d-block"/></td>
 					<td th:alt="${video.id}"><h6 th:text="${video.title}"></h6></td>
