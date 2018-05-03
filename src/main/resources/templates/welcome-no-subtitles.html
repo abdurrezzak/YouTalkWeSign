@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+<title>YouTalkWeSign</title>
+
+<!-- FontAwesome & Bootstrap core -->
+<script src="https://use.fontawesome.com/30a2c42d68.js"></script>
+<link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="webjars/seiyria-bootstrap-slider/9.7.2/dist/css/bootstrap-slider.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+
+<!-- Custom styles for this template -->
+<link rel="stylesheet" th:href="@{/css/app.css}" />
+
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
+		<a href="http://ytws.io" class="navbar-brand mb-0 h1">
+			<i class="fa fa-sign-language fa-lg" aria-hidden="true"></i>
+			YouTalkWeSign
+		</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent" aria-expanded="false"
+			aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse  justify-content-between" id="navbarSupportedContent">
+			<form  class="form-inline my-2 my-lg-0 form-search">
+				<input class="form-control mr-sm-2" type="search"  id="search-field"
+					placeholder="Search for a video..." aria-label="Search for a video..." />
+			</form>
+			
+			<div sec:authorize="!isAuthenticated()">
+				<!-- this content is only shown to the not authenticated users -->
+			  	<form class="form-inline my-2 my-lg-0" th:action="@{/}" method="post">
+		            <input id="username" name="username" class="form-control mr-sm-2" type="text" placeholder="Username" />	            
+		            <input id="password" name="password" class="form-control mr-sm-2" type="password" placeholder="Password" />
+		            <button id="log-in-button" type="submit" class="btn btn-outline-success mr-sm-2">Login</button>
+		            <button id="register-button" type="button" class="btn btn-outline-info">Register</button>
+		        </form>
+			</div>	
+			<div sec:authorize="isAuthenticated()">
+				<!-- this content is only shown to the authenticated users -->
+			  	<ul class="nav navbar-nav pull-lg-right">
+					<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<!-- GET USERNAME -->
+	                    <span sec:authentication="name"></span>
+					</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<form action="#" th:action="@{/logout}" method="post">
+							<button type="submit" class="dropdown-item">Log out</button>
+						</form>
+					</div>
+				  </li>
+	            </ul>
+			</div>	
+		</div>
+	</nav>
+	
+	<div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul id="sidebar-nav">
+                <li alt="history">           
+                    <i class="fa fa-history" aria-hidden="true"></i>
+                    History
+                </li>
+                <li alt="hearted">
+                    <i class="fa fa-heart-o" aria-hidden="true"></i>                    	
+                    Hearted
+                </li>
+                <li alt="trending">
+                    <i class="fa fa-fire" aria-hidden="true"></i>                    	
+                    Trending
+                </li>
+                <li alt="about-us">
+                    <i class="fa fa-info-circle" aria-hidden="true"></i>                    	
+                    About Us
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">              				
+				<div class="non-visible" id="video-sample">
+					<div class="container-row">
+						<div id="fake-layer1">
+							<img id="thumbnail-image" th:src="${thumbnailImageUrl}" />
+						</div>			
+						<div id="fake-layer2">						
+							<div class="lds-css ng-scope" style="width: 400px; height: 400px;">
+								<div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+							</div>
+							<div class="alert alert-info">
+	 							<h4>We are doing speech-to-text conversion. Please wait.</h4>
+							</div>					
+						</div>	
+					</div>
+				
+					<div id="video-controls">
+						<input type="text" class="span2" value="" 
+							data-slider-min="0" data-slider-max="100" data-slider-step="1" 
+							data-slider-value="100" data-slider-id="GC" id="G" 
+							data-slider-tooltip="hide" data-slider-handle="round" />
+													
+						<button type="button" id="pause-icon" class="clickable-button clickable-button-first">
+							<i class="fa fa-pause control-icon"></i>
+						</button>
+						<button type="button" id="resume-icon" class="clickable-button clickable-button-first non-visible">
+							<i class="fa fa-play control-icon"></i>
+						</button>
+						<button type="button" id="subtitles-icon" class="clickable-button">
+							<i class="fa fa-american-sign-language-interpreting control-icon" data-toggle="tooltip" 
+							data-placement="top" title="Subtitle under avatar"></i>
+						</button>
+						<button type="button" id="heart-icon" class="clickable-button">
+							<div th:if="${hasHeart} == true">
+								<i class="fa fa-heart hearted control-icon"></i>
+							</div>
+							<div th:if="${hasHeart} == false">
+								<i class="fa fa-heart control-icon"></i>
+							</div>						
+						</button>																		   						
+					</div>								
+					<hr/>
+				</div>							
+				<div id="extra">
+					<!-- sidebar clicked content will come here with thymeleaf fragment -->
+				</div>
+				
+				<div id="info">				
+					<div th:if="${param.username}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Username is null.</h6>
+	                </div>
+	                <div th:if="${param.password}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Password is null.</h6>
+	                </div>
+	                <div th:if="${param.emailNull}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Email is null.</h6>
+	                </div>
+	                <div th:if="${param.emailInvalid}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Invalid email.</h6>
+	                </div>
+					<div th:if="${param.error}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Invalid username and password.</h6>
+	                </div>
+	                <div th:if="${param.exists}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-danger">Username exists.</h6>
+	                </div>
+	                <div th:if="${param.success}">  
+						<hr class="alert-hr"></hr>  							
+                    	<h6 class="alert alert-success">You have been registered successfully.</h6>
+	                </div>
+	                <div th:if="${param.logout}"> 
+	                    <hr class="alert-hr"></hr>  	
+	                    <h6 class="alert alert-danger">You have been logged out.</h6>
+	                </div>
+				</div>
+            </div>
+        
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Bootstrap core JavaScript -->
+	
+	<script src="webjars/jquery/3.2.1/jquery.min.js"></script>
+	<script src="webjars/popper.js/1.12.5/dist/umd/popper.min.js"></script>
+	<script type="text/javascript" src="webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="webjars/seiyria-bootstrap-slider/9.7.2/dist/bootstrap-slider.min.js"></script>
+	<script type="text/javascript" th:src="@{/js/BootstrapMenu.js}"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+	<script th:inline="javascript">
+	
+		// TODO: get video id from java spring thymeleaf
+		var videoId = [[${v}]];
+		if (videoId == null) {
+			$('#extra').load('/about-us');
+		} else {
+			$('#video-sample').removeClass('non-visible');
+		} 
+		
+		$('li').on('click', function(event) {	
+			// remove register li if exists
+			if ($('#register-li').length) {
+				$('#register-li').remove();
+			}
+			
+			// remove search li if exists
+			if ($('#search-li').length) {
+				$('#search-li').remove();
+			}
+			
+			// remove old parameters from url and remove alert dangers
+			window.history.replaceState({}, document.title, "/");
+			$('.alert-danger, .alert-success, .alert-hr').remove();
+			
+			// get clicked li
+			var clicked = $(this).attr('alt');
+
+			// remove current active and make clicked active
+			$('li').removeClass('active');
+			$(this).addClass('active');
+			
+			// we need this url to call java spring controller
+			var url = '/' + clicked;
+
+			// load thymeleaf fragment
+			$('#extra').load(url, function() {
+				window.scrollTo(0, document.querySelector('#extra').scrollHeight);					
+			});
+		});
+		
+		$('#register-button').on('click', function(event) {
+			// make other li's not active
+			$('li').removeClass('active');
+		
+			// if not exists
+			if (!$('#register-li').length) {
+				// add new li to the ul
+				$("#sidebar-wrapper ul").append(
+					'<li alt="register" id="register-li"><i class="fa fa-user" aria-hidden="true"></i> Register</li>');
+			} 
+			
+			// make it active
+			$('#register-li').addClass('active');
+
+			$('#extra').load('/register', function() {
+				// scroll to new location
+				window.scrollTo(0, document.querySelector('#extra').scrollHeight);						
+			});					
+		});
+		
+		// disblbe enter key
+		$('#search-field').keypress(function(event) {
+		    if (event.keyCode == 13) {
+		        event.preventDefault();
+		    }
+		});
+		
+		$('#search-field').keyup(function(event) {
+			if (event.keyCode == 13) { // disalbe enter key
+				event.preventDefault();
+				return false;
+			}	
+				
+			// make other li's not active
+			$('li').removeClass('active');
+			
+			// if not exists
+			if (!$('#search-li').length) {
+				// add new li to the ul
+				$("#sidebar-wrapper ul").append(
+					'<li alt="search" id="search-li"><i class="fa fa-search" aria-hidden="true"></i> Search</li>');
+			} 
+				
+			// make it active
+			$('#search-li').addClass('active');
+				
+			// get field value and send GET request
+			var fieldValue = $(this).val();
+			fieldValue = fieldValue.replace(/\s+/g, '+')
+			console.log(fieldValue);
+			$('#extra').load('/search?keyword=' + fieldValue, function() {
+				
+				// enable tooltips
+				$('[data-toggle="tooltip"]').tooltip();
+				
+				if (document.getElementById("video-sample").classList.contains('non-visible')) {
+					// nothing to do
+				} else {
+					// scroll to new location
+					window.scrollTo(0, document.querySelector('#extra').scrollHeight * 0.2);	
+				}						
+			});	
+	    });
+		
+		// sound slider With JQuery
+		var soundSliding = function() {
+			// console.log('current sound: ' + g.getValue());	
+		};
+		var g = $('#G').slider()
+				.on('slide', soundSliding)
+				.data('slider');
+		
+		// calledfrom thymeleaf fragments when video thumbnails are clicked
+		function videoThumbnailClicked(clickedVideoId) {
+			window.location.replace("/watch?v=" + clickedVideoId);
+	    }
+	</script>
+</body>
+</html>

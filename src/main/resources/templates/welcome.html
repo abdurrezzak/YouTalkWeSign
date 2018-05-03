@@ -12,6 +12,7 @@
 <script src="https://use.fontawesome.com/30a2c42d68.js"></script>
 <link rel="stylesheet" type="text/css" href="webjars/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
 <link rel="stylesheet" type="text/css" href="webjars/seiyria-bootstrap-slider/9.7.2/dist/css/bootstrap-slider.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
 
 <!-- Custom styles for this template -->
 <link rel="stylesheet" th:href="@{/css/app.css}" />
@@ -19,10 +20,10 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-		<span class="navbar-brand mb-0 h1">
+		<a href="http://ytws.io" class="navbar-brand mb-0 h1">
 			<i class="fa fa-sign-language fa-lg" aria-hidden="true"></i>
 			YouTalkWeSign
-		</span>
+		</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse"
 			data-target="#navbarSupportedContent" aria-expanded="false"
 			aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
@@ -105,7 +106,7 @@
 								</div>	
 							</div>
 							<div id="inside-sign-2">
-								<video src="sign-videos/neutral.mp4" id="neutralVideo" width="289" height="193" type="video/mp4"></video>
+								<video src="white/sign-videos/neutral.mp4" id="neutralVideo" width="289" height="193" type="video/mp4"></video>
 								<div class="word-div non-visible">
 									<h4 id="dummy-word">-</h4>	
 								</div>	
@@ -125,22 +126,25 @@
 							data-slider-min="0" data-slider-max="100" data-slider-step="1" 
 							data-slider-value="100" data-slider-id="GC" id="G" 
 							data-slider-tooltip="hide" data-slider-handle="round" />
-									
-						<button type="button" id="subtitles-icon" class="clickable-button clickable-button-first">
-							<i class="fa fa-newspaper-o control-icon"></i>
-						</button>
-						<button type="button" id="pause-icon" class="clickable-button">
+													
+						<button type="button" id="pause-icon" class="clickable-button clickable-button-first">
 							<i class="fa fa-pause control-icon"></i>
 						</button>
-						<button type="button" id="resume-icon" class="clickable-button non-visible">
+						<button type="button" id="resume-icon" class="clickable-button clickable-button-first non-visible">
 							<i class="fa fa-play control-icon"></i>
 						</button>
-						<button type="button" class="clickable-button">
-							<i class="fa fa-heart control-icon"></i>
+						<button type="button" id="subtitles-icon" class="clickable-button">
+							<i class="fa fa-american-sign-language-interpreting control-icon" data-toggle="tooltip" 
+							data-placement="top" title="Subtitle under avatar"></i>
 						</button>
-						<button type="button" class="clickable-button">
-							<i class="fa fa-cog control-icon"></i>
-						</button>																			   						
+						<button type="button" id="heart-icon" class="clickable-button">
+							<div th:if="${hasHeart} == true">
+								<i class="fa fa-heart hearted control-icon"></i>
+							</div>
+							<div th:if="${hasHeart} == false">
+								<i class="fa fa-heart control-icon"></i>
+							</div>						
+						</button>																		   						
 					</div>								
 					<hr/>
 				</div>							
@@ -196,9 +200,17 @@
 	<script src="webjars/popper.js/1.12.5/dist/umd/popper.min.js"></script>
 	<script type="text/javascript" src="webjars/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="webjars/seiyria-bootstrap-slider/9.7.2/dist/bootstrap-slider.min.js"></script>
+	<script type="text/javascript" th:src="@{/js/BootstrapMenu.js}"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 	<script th:inline="javascript">
+	
+		$(document).ready(function() {
+			// enable tooltips
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+	
 		// drag listener OLD DRAG 
-		//Make the DIV element draggagle:
+		// Make the DIV element draggagle:
 		dragElement(document.getElementById(("layer2")));
 		
 		function dragElement(elmnt) {
@@ -235,6 +247,56 @@
 		    	document.onmousemove = null;	    	
 			}	
 		} 
+		
+		var menu = new BootstrapMenu('#layer2', {
+			actions: [
+				{
+					name: 'White background',
+				    onClick: function() {				   
+				    	prefix = 'white';
+				    	neutralVideo.src = 'white/sign-videos/neutral.mp4';
+				    	// fix stack
+				    	var i = 0;
+				    	myVids.forEach(function(url) {
+				    		var afterBase = url.substring(url.indexOf('/') + 1);
+							var newUrl = 'white/' + afterBase;
+							myVids[i] = newUrl;
+							i++;
+						});
+				    }
+			  	}, 
+			  	{
+			      	name: 'Blue background',
+			      	onClick: function() {
+			      		prefix = 'blue';
+			      		neutralVideo.src = 'blue/sign-videos/neutral.mp4';
+			      		// fix stack
+				    	var i = 0;
+				    	myVids.forEach(function(url) {
+				    		var afterBase = url.substring(url.indexOf('/') + 1);
+							var newUrl = 'blue/' + afterBase;
+							myVids[i] = newUrl;
+							i++;
+						});
+			        }	
+			    }, 
+			    {
+			      	name: 'Gray background',
+			      	onClick: function() {
+			      		prefix = 'gray';
+			      		neutralVideo.src = 'gray/sign-videos/neutral.mp4';
+			      		// fix stack
+				    	var i = 0;
+				    	myVids.forEach(function(url) {
+				    		var afterBase = url.substring(url.indexOf('/') + 1);
+							var newUrl = 'gray/' + afterBase;
+							myVids[i] = newUrl;
+							i++;
+						});
+			      	}
+			  	}
+			]
+		});
 	
 		var tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/iframe_api";
@@ -305,7 +367,6 @@
 			});
 			return result? result[0] : null; // or undefined	
 		}
-
 		
 		// mp4 array
 		var myWords = [];
@@ -314,6 +375,8 @@
 		// initialize timer
 		var myTimer; 
 		
+		// prefix is for background
+		var prefix = 'white';
 		// important function
 		function onPlayerStateChange(event) {
 			if(event.data == 1) { // playing
@@ -373,13 +436,13 @@
 								if (dicWord === textWord) { // old version is at 11 april									
 									myWords.push(textWord);										
 									var url = dictionary.videoUrl;
-									myVids.push(url);
+									myVids.push(prefix + '/' + url);
 									isFound = true;
 								} 
 							});	
 							if (!isFound) {
 								// neutral and show word with text
-								myVids.push('sign-videos/neutral.mp4');							
+								myVids.push(prefix + '/' + 'sign-videos/neutral.mp4');							
 								myWords.push(textWord);							
 							}
 						});
@@ -391,8 +454,8 @@
 							console.log('my length: ' + myVids.length);
 							console.log('heya: ' + myVids);
 							myVids.forEach(function(url) {
-								if (url !== 'sign-videos/neutral.mp4') {
-									var fullWord = getWordByUrl(url);									
+								if (url.indexOf('sign-videos/neutral.mp4') == -1 ) {
+									var fullWord = getWordByUrl(url.substring(url.indexOf('/') + 1));									
 									var length = fullWord.length;				
 								    sum = sum + length;
 								} else {
@@ -502,8 +565,16 @@
 			});					
 		});
 		
+		// disblbe enter key
+		$('#search-field').keypress(function(event) {
+		    if (event.keyCode == 13) {
+		        event.preventDefault();
+		    }
+		});
+		
 		$('#search-field').keyup(function(event) {
-			if (event.keyCode === 13) { // disalbe enter key
+			if (event.keyCode == 13) { // disalbe enter key
+				event.preventDefault();
 				return false;
 			}	
 				
@@ -522,9 +593,13 @@
 				
 			// get field value and send GET request
 			var fieldValue = $(this).val();
-			fieldValue = fieldValue.replace(' ', '+');
+			fieldValue = fieldValue.replace(/\s+/g, '+')
 			console.log(fieldValue);
 			$('#extra').load('/search?keyword=' + fieldValue, function() {
+				
+				// enable tooltips
+				$('[data-toggle="tooltip"]').tooltip();
+				
 				if (document.getElementById("video-sample").classList.contains('non-visible')) {
 					// nothing to do
 				} else {
@@ -537,7 +612,11 @@
 
 		var min = 200;
 		var max = 1119;				
-		document.getElementById('my-progress').addEventListener('click', function (e) {		
+		document.getElementById('my-progress').addEventListener('click', function (e) {	
+			// remove cache first
+			myVids = [];
+			myWords = [];
+			
 		    var x = e.pageX - this.offsetLeft - min;
 			var percent = (x / (max - min)) * 100;
 			var duration = player.getDuration();	
@@ -598,6 +677,54 @@
 
 		$('#subtitles-icon').on('click', function(event) {
 			$('.word-div').toggleClass('non-visible');
+		});
+		
+		
+		var username = [[${username}]];
+		$('#heart-icon').on('click', function(event) {
+			console.log(username);
+			if (username === 'anonymousUser') {
+				// display a warning toast, with no title
+				toastr.options.timeOut = 60; 
+				toastr.options.extendedTimeOut = 180; 
+				toastr.error('This requires login!')
+			} else {
+				var hasHeart = $('.control-icon').hasClass('hearted');			
+				if (!hasHeart) {
+					// add heart then
+					data = {
+			        	'username': username,
+			            'videoId': videoId
+			        };   
+					$.ajax({
+			            url: '/api/hearts/',
+			            dataType: 'json',
+			            contentType: 'application/json;charset=utf-8',
+			            type: 'POST',
+			            data: JSON.stringify(data),
+			            complete: function(xhr, textStatus) {
+			            	// update front-end
+			                if (xhr.status == 201) {
+			                	$('.fa-heart').addClass('hearted');
+			                }
+			            } 
+			        });
+				} else {
+					// delete heart then
+					data = {
+			        	'username': username,
+			            'videoId': videoId
+			        };   
+					$.ajax({
+			            url: 'unheart',
+			            type: 'POST',
+			            data: data,
+			            success: function(response) {
+			            	$('.fa-heart').removeClass('hearted');
+			            } 
+			        });
+				}
+			}
 		});
 		
 		// calledfrom thymeleaf fragments when video thumbnails are clicked
