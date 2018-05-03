@@ -94,9 +94,12 @@ public class MainService {
 				text = text.replace("'", "");
 				text = text.replace("quot", "");
 				text = text.trim().replaceAll(" +", " "); // replace more than one spaces with one
-				if (text.charAt(0) == ' ') {
-					text = text.substring(1);
+				if (text.length() > 0) {
+					if (text.charAt(0) == ' ') {
+						text = text.substring(1);
+					}
 				}
+				
 				
 				Text temp = new Text();
 				
@@ -178,7 +181,7 @@ public class MainService {
 		
 		GoogleCredentials credentials;
 		LanguageServiceSettings settings;
-	    File credentialsPath = new File("/home/service-account-file.json");  
+	    File credentialsPath = new File("D:/service-account-file.json");  
 	    // TODO: D:/service-account-file.json OR /home/service-account-file.json
 	    try (FileInputStream serviceAccountStream = new FileInputStream(credentialsPath)) {
 	    	credentials = ServiceAccountCredentials.fromStream(serviceAccountStream);

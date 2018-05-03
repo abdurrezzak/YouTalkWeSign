@@ -1,5 +1,7 @@
 package com.youtalkwesign.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,13 @@ public class SearchController {
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String getLink(@RequestParam String keyword, ModelMap model) {
 		
-		List<Video> searchVideos = service.getResults(keyword);
+		List<Video> searchVideosWithCaptions = service.getResultsWithCaptions(keyword);
+		List<Video> searchVideosWithoutCaptions = service.getResultsWithoutCaptions(keyword);
+		
+		List<Video> searchVideos = new ArrayList<Video>(searchVideosWithCaptions);
+		searchVideos.addAll(searchVideosWithoutCaptions);
+		
+		Collections.shuffle(searchVideos);
 
 		model.addAttribute("searchVideos", searchVideos);
 		

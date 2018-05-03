@@ -4,14 +4,18 @@ public class Video {
 	private String id;
 	private String title;
 	private String thumbnailImageUrl;
+	private boolean subtitles;
+	
 	public Video() {
 		super();
+		subtitles = true;
 	}
 	public Video(String id, String title, String thumbnailImageUrl) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.thumbnailImageUrl = thumbnailImageUrl;
+		subtitles = true;
 	}
 	
 	public String getId() {
@@ -32,5 +36,12 @@ public class Video {
 	public void setThumbnailImageUrl(String thumbnailImageUrl) {
 		this.thumbnailImageUrl = thumbnailImageUrl;
 	}
+	public boolean isSubtitles() {
+		return subtitles;
+	}
+	public void setSubtitles(boolean subtitles) {
+		this.subtitles = subtitles;
+	}
+	
 	
 }

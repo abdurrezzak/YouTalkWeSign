@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class VideoController {
 
-	@GetMapping("sign-videos/{word}")
-	protected void getVideo(@PathVariable String word, HttpServletResponse response) throws IOException {
-		File file = new File("home/sign-videos/" + word + ".mp4"); // TODO: D:/sign-videos/ or home/sign-videos/
+	@GetMapping("{color}/sign-videos/{word}")
+	protected void getVideo(@PathVariable String color, @PathVariable String word,
+			HttpServletResponse response) throws IOException {
+		File file = new File("D:/" + color + "/sign-videos/" + word + ".mp4"); // TODO: D:/sign-videos/ or /home/sign-videos/
 		response.setHeader("Content-Type", "video/mp4");
 		response.setHeader("Content-Length", String.valueOf(file.length()));
 		response.setHeader("Content-Disposition", "inline; filename=\"" + file.getName() + "\"");
